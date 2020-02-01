@@ -1,0 +1,9 @@
+D:\ProjectResearch\HelperLibrary\EmailHelper\bin\Debug\netcoreapp2.1\EmailHelper.deps.json
+D:\ProjectResearch\HelperLibrary\EmailHelper\bin\Debug\netcoreapp2.1\EmailHelper.dll
+D:\ProjectResearch\HelperLibrary\EmailHelper\bin\Debug\netcoreapp2.1\EmailHelper.pdb
+D:\ProjectResearch\HelperLibrary\EmailHelper\obj\Debug\netcoreapp2.1\EmailHelper.csproj.CoreCompileInputs.cache
+D:\ProjectResearch\HelperLibrary\EmailHelper\obj\Debug\netcoreapp2.1\EmailHelper.AssemblyInfoInputs.cache
+D:\ProjectResearch\HelperLibrary\EmailHelper\obj\Debug\netcoreapp2.1\EmailHelper.AssemblyInfo.cs
+D:\ProjectResearch\HelperLibrary\EmailHelper\obj\Debug\netcoreapp2.1\EmailHelper.dll
+D:\ProjectResearch\HelperLibrary\EmailHelper\obj\Debug\netcoreapp2.1\EmailHelper.pdb
+D:\ProjectResearch\HelperLibrary\EmailHelper\obj\Debug\netcoreapp2.1\EmailHelper.csprojAssemblyReference.cache
