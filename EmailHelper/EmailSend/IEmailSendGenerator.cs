@@ -9,51 +9,61 @@ namespace EmailHelper.EmailSend
 {
     public interface IEmailSend
     {
-        MailReturnValue SMTPSendEmail(string fromMail,string mailSubject, string mailBody, bool isBodyHTML,string toMail);
-        MailReturnValue SMTPSendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail,string toCC);
-        MailReturnValue SMTPSendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail,string toCC,string toBCC);
-        MailReturnValue SMTPSendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
+        MailReturnValue SendEmail(string fromMail,string mailSubject, string mailBody, bool isBodyHTML,string toMail);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail,string toCC);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail,string toCC,string toBCC);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
 
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments);
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments);
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments);
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments);
 
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments, int sizeLimit);
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments, int sizeLimit);
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments, int sizeLimit);
-        MailReturnValue SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments, int sizeLimit);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments, int sizeLimit);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments, int sizeLimit);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments, int sizeLimit);
+        MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments, int sizeLimit);
 
         
     }
     public interface IEmailSendAsync
     {
-        Task<MailReturnValue> SMTPSendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail);
-        Task<MailReturnValue> SMTPSendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC);
-        Task<MailReturnValue> SMTPSendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC);
-        Task<MailReturnValue> SMTPSendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
+
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments);
+
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments, int sizeLimit);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments, int sizeLimit);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments, int sizeLimit);
+        Task<MailReturnValue> SendEmailAsync(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments, int sizeLimit);
+
     }
 
     public interface IEmailSendThread
     {
-        MailReturnValue SMTPSendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail);
-        MailReturnValue SMTPSendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC);
-        MailReturnValue SMTPSendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC);
-        MailReturnValue SMTPSendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
+
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments);
+
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments, int sizeLimit);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments, int sizeLimit);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments, int sizeLimit);
+        MailReturnValue SendEmailThread(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments, int sizeLimit);
+
     }
 
-    public interface IEmailSendAttachment
-    {
-        bool SMTPSendEmailAttachment10MB(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments, string toMail);
-        bool SMTPSendEmailAttachment10MB(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments, string toMail, string toCC);
-        bool SMTPSendEmailAttachment10MB(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments, string toMail, string toCC, string toBCC);
-        bool SMTPSendEmailAttachment10MB(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments, EmailToList toMails);
-
-        bool SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments,int attachLimitSize,string toMail);
-        bool SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments, int attachLimitSize, string toMail, string toCC);
-        bool SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments, int attachLimitSize, string toMail, string toCC, string toBCC);
-        bool SMTPSendEmailAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, List<EmailAttachment> attachments, int attachLimitSize, EmailToList toMails);
-    }
     
     
 }

@@ -1,14 +1,15 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "3a336938b88a615f86ad8c67a1e61d79b8fd0ebc"
+    "signature": "0d50705fe847234adcbd6343b69c346a794ed8db"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.1": {
       "EmailHelper/1.0.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis": "3.4.0"
+          "Microsoft.CodeAnalysis": "3.4.0",
+          "Microsoft.Exchange.WebServices": "2.2.0"
         },
         "runtime": {
           "EmailHelper.dll": {}
@@ -341,6 +342,18 @@
           },
           "lib/netstandard2.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll": {
             "locale": "zh-Hant"
+          }
+        }
+      },
+      "Microsoft.Exchange.WebServices/2.2.0": {
+        "runtime": {
+          "lib/40/Microsoft.Exchange.WebServices.Auth.dll": {
+            "assemblyVersion": "15.0.0.0",
+            "fileVersion": "15.0.913.0"
+          },
+          "lib/40/Microsoft.Exchange.WebServices.dll": {
+            "assemblyVersion": "15.0.0.0",
+            "fileVersion": "15.0.913.15"
           }
         }
       },
@@ -707,6 +720,13 @@
       "sha512": "sha512-BnE/sgDNtxSaCxbwfUglgyUqNiGUHrH/iJ5s6WC62gqpNYUWthdbvkOPml+2Kyit3ZhW7nvQBX8wvG5JCFK7BQ==",
       "path": "microsoft.codeanalysis.workspaces.common/3.4.0",
       "hashPath": "microsoft.codeanalysis.workspaces.common.3.4.0.nupkg.sha512"
+    },
+    "Microsoft.Exchange.WebServices/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-x7E4IO1+hSS1QDywAhwUxWMK9vyS46uvVJ8mCfjj4AqGPImuUhn+FmrLYfgxRSQ367brWQwAwVoi38mv6soiJQ==",
+      "path": "microsoft.exchange.webservices/2.2.0",
+      "hashPath": "microsoft.exchange.webservices.2.2.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/2.1.2": {
       "type": "package",

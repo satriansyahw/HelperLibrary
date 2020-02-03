@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using EmailHelper.MiscClass;
-using EmailHelper.Properties;
+
 
 namespace EmailHelper.Validation
 {

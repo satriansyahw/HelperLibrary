@@ -1,23 +1,28 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Mail;
+using System.Text;
+using System.Threading.Tasks;
+using EmailHelper.EmailClient;
 using EmailHelper.EmailMessage;
 using EmailHelper.MiscClass;
+
 using EmailHelper.Validation;
 
 namespace EmailHelper.EmailSend
 {
-    public class SMTPEmailSend : IEmailSend
+    public class OutlookEmailSend : IEmailSend
     {
         MailReturnValue result = new MailReturnValue();
-        public SMTPEmailSend()
+        public OutlookEmailSend(EmailOutlookProperties properties)
         {
-                
-        }
-        public SMTPEmailSend(EmailSMTPProperties properties)
-        {
-            EmailProperties.GetInstance.SMTPMailPort = properties.SMTPMailPort;
-            EmailProperties.GetInstance.SMTPMailHost = properties.SMTPMailHost;
+            EmailProperties.GetInstance.ExchangeConnectionTimeout = properties.ExchangeConnectionTimeOut;
+            EmailProperties.GetInstance.ExchangeMailServerAddress = properties.ExchangeMailServerAddress;
+            EmailProperties.GetInstance.ExchangeMailServerPassword = properties.ExchangeMailServerPassword;
+            EmailProperties.GetInstance.ExchangeMailServerUsername = properties.ExchangeMailServerUsername;
+            EmailProperties.GetInstance.ExchangeUriService = properties.ExchangeUriService;
+
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail)
         {  
@@ -26,9 +31,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMail);
-
-            result= ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMail);
+            result= ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC)
@@ -38,8 +43,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMail,toCC);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMail,toCC);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC)
@@ -49,8 +55,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC,toBCC);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC,toBCC);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails)
@@ -60,8 +67,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMails);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessage.GetInstance.CreateMessage(fromMail, mailSubject, mailBody, isBodyHTML, toMails);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
 
@@ -77,8 +85,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail,emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail,emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments)
@@ -93,8 +102,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC,emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail,toCC, emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments)
@@ -109,8 +119,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC, toBCC,emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail,toCC,toBCC, emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments)
@@ -125,8 +136,10 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMails,emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMails, emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
+
             return result;
         }
 
@@ -142,8 +155,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments, int sizeLimit)
@@ -158,8 +172,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC, emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC, emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments, int sizeLimit)
@@ -174,8 +189,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC, toBCC, emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMail, toCC, toBCC, emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
         public virtual MailReturnValue SendEmail(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments, int sizeLimit)
@@ -190,8 +206,9 @@ namespace EmailHelper.EmailSend
             {
                 return result;
             }
-            MailMessage mailMessage = (MailMessage)CreateSMTPMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMails, emailAttachments);
-            result = ClientSMTP.GetInstance.SentMail(mailMessage);
+            Microsoft.Exchange.WebServices.Data.EmailMessage mailMessage = (Microsoft.Exchange.WebServices.Data.EmailMessage)
+                CreateOutlookMessageAttachment.GetInstance.CreateMessageWithAttachment(fromMail, mailSubject, mailBody, isBodyHTML, toMails, emailAttachments);
+            result = ClientOutlook.GetInstance.SentMail(mailMessage);
             return result;
         }
 

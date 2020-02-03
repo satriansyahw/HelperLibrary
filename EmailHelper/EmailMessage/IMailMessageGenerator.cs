@@ -8,17 +8,17 @@ namespace EmailHelper.EmailMessage
 {
     public interface IMailMessage
     {
-        MailMessage CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail);
-        MailMessage CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC);
-        MailMessage CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC,string toBCC);
-        MailMessage CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
+        object CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail);
+        object CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC);
+        object CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC,string toBCC);
+        object CreateMessage(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails);
     }
     public interface IMailMessageWithAttachment
     {
-        MailMessage CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments);
-        MailMessage CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments);
-        MailMessage CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments);
-        MailMessage CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments);
+        object CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, List<EmailAttachment> emailAttachments);
+        object CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, List<EmailAttachment> emailAttachments);
+        object CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, string toMail, string toCC, string toBCC, List<EmailAttachment> emailAttachments);
+        object CreateMessageWithAttachment(string fromMail, string mailSubject, string mailBody, bool isBodyHTML, EmailToList toMails, List<EmailAttachment> emailAttachments);
     }
 }
 

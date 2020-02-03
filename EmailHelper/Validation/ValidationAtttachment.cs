@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EmailHelper.EmailSend;
+﻿using System.Collections.Generic;
 using EmailHelper.MiscClass;
-using EmailHelper.Properties;
 
 namespace EmailHelper.Validation
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EmailHelper.Properties
+namespace EmailHelper.MiscClass
 {
     public class EmailProperties
     {
@@ -28,8 +28,13 @@ namespace EmailHelper.Properties
         public string WrongAttachment= "Wromg mail attachment, please check attachment file and it's size ";//
 
         public string SMTPMailHost = "mx.apo.epson.net";
-        public int SMPTPMailPort = 25;
-          
-}
+        public int SMTPMailPort = 25;
+
+        public string ExchangeMailServerAddress = @"papua.system@sep.epson.com.sg";
+        public string ExchangeMailServerUsername = @"papua.system@sep.epson.com.sg";
+        public string ExchangeMailServerPassword = @"pebisdghelov";
+        public string ExchangeUriService = @"https://outlook.office365.com/EWS/Exchange.asmx";
+        public int ExchangeConnectionTimeout = 300000;
+    }
     
 }

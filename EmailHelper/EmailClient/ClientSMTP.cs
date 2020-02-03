@@ -1,11 +1,8 @@
 ﻿using EmailHelper.EmailClient;
 using EmailHelper.MiscClass;
-using EmailHelper.Properties;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,7 +21,7 @@ namespace EmailHelper.EmailSend
                 return instance;
             }
         }
-        public virtual MailReturnValue SentMail(MailMessage mailMessage)
+        public virtual MailReturnValue SentMail(object mailMessage)
         {
             try
             {
@@ -33,9 +30,9 @@ namespace EmailHelper.EmailSend
                     result = result.SetMailReturnValue(false, EmailProperties.GetInstance.WrongMailMessageNull);
                 }
                 result = result.SetMailReturnValue(true,string.Empty);
-                SmtpClient smtpClient = new SmtpClient(EmailProperties.GetInstance.SMTPMailHost, EmailProperties.GetInstance.SMPTPMailPort);
+                SmtpClient smtpClient = new SmtpClient(EmailProperties.GetInstance.SMTPMailHost, EmailProperties.GetInstance.SMTPMailPort);
                 smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
-                smtpClient.Send(mailMessage);
+                smtpClient.Send((MailMessage)mailMessage);
                 result = result.SetMailReturnValue(true, string.Empty);
             }
             catch (ArgumentNullException ex) {
@@ -71,7 +68,7 @@ namespace EmailHelper.EmailSend
 
         }
 
-        public virtual async Task<MailReturnValue> SentMailAsync(MailMessage mailMessage)
+        public virtual async Task<MailReturnValue> SentMailAsync(object mailMessage)
         {
             try
             {
@@ -80,9 +77,9 @@ namespace EmailHelper.EmailSend
                     result = result.SetMailReturnValue(false, EmailProperties.GetInstance.WrongMailMessageNull);
                 }
                 result = result.SetMailReturnValue(true, string.Empty);
-                SmtpClient smtpClient = new SmtpClient(EmailProperties.GetInstance.SMTPMailHost, EmailProperties.GetInstance.SMPTPMailPort);
+                SmtpClient smtpClient = new SmtpClient(EmailProperties.GetInstance.SMTPMailHost, EmailProperties.GetInstance.SMTPMailPort);
                 smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
-                await smtpClient.SendMailAsync(mailMessage);
+                await smtpClient.SendMailAsync((MailMessage)mailMessage);
                 result = result.SetMailReturnValue(true, string.Empty);
                // client.Credentials = new NetworkCredential(
                //"noreply.application@gmail.com", "humber123");
@@ -125,7 +122,7 @@ namespace EmailHelper.EmailSend
             return result;
         }
 
-        public void SentMailThread(MailMessage mailMessage)
+        public void SentMailThread(object mailMessage)
         {
             Thread email = new Thread(delegate ()
             {
@@ -134,5 +131,6 @@ namespace EmailHelper.EmailSend
             email.IsBackground = true;
             email.Start();           
         }
+
     }
 }
