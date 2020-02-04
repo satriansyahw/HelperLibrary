@@ -28,4 +28,5 @@ namespace EmailHelper.MiscClass
         public string ExchangeUriService { get; set; }
         public int ExchangeConnectionTimeOut { get; set; }
     }
+
 }

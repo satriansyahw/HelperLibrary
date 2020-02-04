@@ -1,0 +1,9 @@
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\obj\Debug\netcoreapp2.1\FileStorage.csproj.CoreCompileInputs.cache
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\obj\Debug\netcoreapp2.1\FileStorage.AssemblyInfoInputs.cache
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\obj\Debug\netcoreapp2.1\FileStorage.AssemblyInfo.cs
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\bin\Debug\netcoreapp2.1\FileStorage.deps.json
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\bin\Debug\netcoreapp2.1\FileStorage.dll
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\bin\Debug\netcoreapp2.1\FileStorage.pdb
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\obj\Debug\netcoreapp2.1\FileStorage.dll
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\obj\Debug\netcoreapp2.1\FileStorage.pdb
+D:\ProjectResearch\HelperLibrary\FileStorage.cs\obj\Debug\netcoreapp2.1\FileStorage.csprojAssemblyReference.cache

@@ -25,14 +25,14 @@ namespace EmailHelper.MiscClass
         public string WrongMailBody = "Wrong mail body, cannot empty";//in MB 
         public string WrongMailSubject = "Wrong mail subject, cannot empty";//
         public string WrongMailMessageNull = "Error MailMessage, cannot null";//
-        public string WrongAttachment= "Wromg mail attachment, please check attachment file and it's size ";//
+        public string WrongAttachment= "Wrong mail attachment, please check attachment file and it's size ";//
 
         public string SMTPMailHost = "mx.apo.epson.net";
         public int SMTPMailPort = 25;
 
-        public string ExchangeMailServerAddress = @"papua.system@sep.epson.com.sg";
-        public string ExchangeMailServerUsername = @"papua.system@sep.epson.com.sg";
-        public string ExchangeMailServerPassword = @"pebisdghelov";
+        public string ExchangeMailServerAddress = @"nasigorengAyamm@sep.epson.com.sg";
+        public string ExchangeMailServerUsername = @"nasigorengAyamm@sep.epson.com.sg";
+        public string ExchangeMailServerPassword = @"nasigorengAyam";
         public string ExchangeUriService = @"https://outlook.office365.com/EWS/Exchange.asmx";
         public int ExchangeConnectionTimeout = 300000;
     }
