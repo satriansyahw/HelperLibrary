@@ -23,6 +23,7 @@ namespace FileStorage.MiscClass
         public string WrongFileManagement = "Wrong file management,please check the filed, maybe not exists  ";//
         public string WrongFileDownload = "Wrong file download,file(s) error  ";//
         public string WrongInitialManagement = "Wrong initial executions  ";//
+        public string AzureGeneratedFile = "This is generated file by system";
         public StorageType FileStorageType = StorageType.LocalNetwork;
     }
 }
