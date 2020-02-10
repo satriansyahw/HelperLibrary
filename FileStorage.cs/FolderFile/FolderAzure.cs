@@ -25,7 +25,7 @@ namespace FileStorage.FolderFile
             }
         }
 
-        public StorageReturnValue CheckFolderAndCreate(string pathFolderName)
+        public virtual StorageReturnValue CheckFolderAndCreate(string pathFolderName)
         {
             result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
             if (!string.IsNullOrEmpty(pathFolderName))
@@ -37,7 +37,7 @@ namespace FileStorage.FolderFile
                     string PathFileName = Path.Combine(pathFolderName, localFileName);
                     var sourceFile = Path.Combine(localPath, localFileName);
                     File.WriteAllText(sourceFile, FileStorageProperties.GetInstance.AzureGeneratedFile);
-                    var myblob = azure.AzureBlobontainer.GetBlockBlobReference(PathFileName);
+                    var myblob = azure.AzureBlobContainer.GetBlockBlobReference(PathFileName);
                     myblob.DeleteAsync().Wait();
                     myblob.UploadFromFileAsync(sourceFile).Wait();
                     FileNetwork.GetInstance.DeleteFile(sourceFile);
@@ -50,7 +50,7 @@ namespace FileStorage.FolderFile
             return result;
         }
 
-        public StorageReturnValue CheckFolderExist(string pathFolderName)
+        public virtual StorageReturnValue CheckFolderExist(string pathFolderName)
         {
             result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
             if (!string.IsNullOrEmpty(pathFolderName))
@@ -60,7 +60,7 @@ namespace FileStorage.FolderFile
             return result;
         }
 
-        public StorageReturnValue CreateFolder(string pathFolderName)
+        public virtual StorageReturnValue CreateFolder(string pathFolderName)
         {
             result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
             if (!string.IsNullOrEmpty(pathFolderName))
@@ -70,51 +70,40 @@ namespace FileStorage.FolderFile
             return result;
         }
 
-        public StorageReturnValue DeleteFolder(string pathFolderName)
+        public virtual StorageReturnValue DeleteFolder(string pathFolderName)
         {
             result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
             if (!string.IsNullOrEmpty(pathFolderName))
             {
-                //CloudStorageAccount storageAccount = CloudStorageAccount.Parse("your storage account");
-                //CloudBlobContainer container = storageAccount.CreateCloudBlobClient().GetContainerReference("pictures");
-                foreach (IListBlobItem blob in azure.AzureBlobContainer.GetDirectoryReference(pathFolderName).ListBlobsSegmentedAsync()
-                {
-                    if (blob.GetType() == typeof(CloudBlob) || blob.GetType().BaseType == typeof(CloudBlob))
-                    {
-                        ((CloudBlob)blob).DeleteIfExists();
-                    }
-                }
-
+                //BlobContinuationToken blobContinuationToken = null;
+                //do
+                //{
+                //    var azureDirBlob = azure.AzureBlobDirectory(pathFolderName);
+                //    var listblob = azureDirBlob.ListBlobsSegmentedAsync(blobContinuationToken).GetAwaiter().GetResult();
+                //    blobContinuationToken = listblob.ContinuationToken;
+                //    foreach (var item in listblob.Results)
+                //    {
+                //        if (item is CloudBlobDirectory directory)
+                //        {
+                //            //DeleteBlobsInDirectoryAsync(azure.StorageContainerName, directory.Prefix);
+                //        }
+                //        else if (item is CloudPageBlob pageBlob)
+                //        {
+                //            //CloudPageBlob cloudPageBlob = container.GetPageBlobReference(pageBlob.Name);
+                //            //success = await cloudPageBlob.DeleteIfExistsAsync();
+                //        }
+                //        else if (item is CloudBlockBlob blockBlob)
+                //        {
+                //            //CloudBlockBlob cloudBlockBlob = container.GetBlockBlobReference(blockBlob.Name);
+                //            //success = await cloudBlockBlob.DeleteIfExistsAsync();
+                //        }
+                //    }
+                //} while (blobContinuationToken != null);
+                result = new StorageReturnValue(true, "Temp true, still under construction", null);
             }
             return result;
 
            
         }
     }
-}
-//https://www.reddit.com/r/csharp/comments/bzj7bf/delete_a_directory_in_azure_storage/
-public async Task<bool> DeleteBlobsInDirectoryAsync(string containerName, string blobName)
-{
-    CloudBlobContainer container = _blobClient.GetContainerReference(containerName);
-    CloudBlobDirectory blobDirectory = container.GetDirectoryReference(blobName);
-    bool success;
-
-    foreach (IListBlobItem item in blobDirectory.ListBlobs())
-    {
-        if (item is CloudBlobDirectory directory)
-        {
-            success = await DeleteBlobsInDirectoryAsync(containerName, directory.Prefix);
-        }
-        else if (item is CloudPageBlob pageBlob)
-        {
-            CloudPageBlob cloudPageBlob = container.GetPageBlobReference(pageBlob.Name);
-            success = await cloudPageBlob.DeleteIfExistsAsync();
-        }
-        else if (item is CloudBlockBlob blockBlob)
-        {
-            CloudBlockBlob cloudBlockBlob = container.GetBlockBlobReference(blockBlob.Name);
-            success = await cloudBlockBlob.DeleteIfExistsAsync();
-        }
-    }
-    return true;
 }

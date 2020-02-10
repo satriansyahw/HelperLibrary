@@ -10,8 +10,9 @@ namespace FileStorage.FolderFile
         private static FolderFileBantuan instance;
         public FolderFileBantuan()
         {
-            this.LoadInitiaFolderMan();
-            this.LoadInitialFileMan();
+            this.LoadInitiaFolder();
+            this.LoadInitialFile();
+            this.LoadInitialFileAsync();
         }
         public static FolderFileBantuan GetInstance
         {
@@ -22,20 +23,28 @@ namespace FileStorage.FolderFile
                 return instance;
             }
         }
-        public Dictionary<StorageType, IFolderManagement> DictFolderMan = new Dictionary<StorageType, IFolderManagement>();
-        private void LoadInitiaFolderMan()
+        public Dictionary<StorageType, IFolderManagement> DictFolder = new Dictionary<StorageType, IFolderManagement>();
+        private void LoadInitiaFolder()
         {
-            DictFolderMan.Add(StorageType.LocalNetwork, FolderNetwork.GetInstance);
-            DictFolderMan.Add(StorageType.FTP, FolderFTP.GetInstance);
-            DictFolderMan.Add(StorageType.Azure,FolderAzure.GetInstance);
+            DictFolder.Add(StorageType.LocalNetwork, FolderNetwork.GetInstance);
+            DictFolder.Add(StorageType.FTP, FolderFTP.GetInstance);
+            DictFolder.Add(StorageType.Azure,FolderAzure.GetInstance);
           
         }
-        public Dictionary<StorageType, IFileManagement> DictFileMan = new Dictionary<StorageType, IFileManagement>();
-        private void LoadInitialFileMan()
+        public Dictionary<StorageType, IFileManagement> DictFile= new Dictionary<StorageType, IFileManagement>();
+        private void LoadInitialFile()
         {
-            DictFileMan.Add(StorageType.LocalNetwork, FileNetwork.GetInstance);
-            DictFileMan.Add(StorageType.FTP, FileFTP.GetInstance);
-            DictFileMan.Add(StorageType.Azure, FileAzure.GetInstance);
+            DictFile.Add(StorageType.LocalNetwork, FileNetwork.GetInstance);
+            DictFile.Add(StorageType.FTP, FileFTP.GetInstance);
+            DictFile.Add(StorageType.Azure, FileAzure.GetInstance);
+
+        }
+        public Dictionary<StorageType, IFileManagementAsync> DictFileAsync = new Dictionary<StorageType, IFileManagementAsync>();
+        private void LoadInitialFileAsync()
+        {
+            DictFileAsync.Add(StorageType.LocalNetwork, FileNetwork.GetInstance);
+            DictFileAsync.Add(StorageType.FTP, FileFTP.GetInstance);
+            DictFileAsync.Add(StorageType.Azure, FileAzure.GetInstance);
 
         }
     }

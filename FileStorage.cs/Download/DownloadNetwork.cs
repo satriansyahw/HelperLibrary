@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using FileStorage.FolderFile;
 using FileStorage.MiscClass;
 
 namespace FileStorage.Download
 {
-    public class DownloadNetwork:IStorageDownload
+    public class DownloadNetwork:IStorageDownload,IStorageDownloadAsync
     {
         public DownloadNetwork()
         {
 
         }
         StorageReturnValue result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
+        IFileManagement fileManagement = FolderFileBantuan.GetInstance.DictFile[StorageType.LocalNetwork];
+        IFileManagementAsync fileManagementAsync = FolderFileBantuan.GetInstance.DictFileAsync[StorageType.LocalNetwork];
         private static DownloadNetwork instance;
         public static DownloadNetwork GetInstance
         {
@@ -25,27 +28,26 @@ namespace FileStorage.Download
             }
         }
 
-        public StorageReturnValue DownloadFile(string pathFileName)
+       public StorageReturnValue  DownloadFile(string downloadToLocation, string fileNameWithExt)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
+            string pathFileName = Path.Combine(downloadToLocation, fileNameWithExt);
             if (!string.IsNullOrEmpty(pathFileName))
             {
-                pathFileName = pathFileName.Trim();
-                IFileManagement fileManagement = FolderFileBantuan.GetInstance.DictFileMan[StorageType.LocalNetwork];
+                pathFileName = pathFileName.Trim();              
                 result = fileManagement.CreateFileDownload(pathFileName);
             }
             return result;
         }
 
-        public StorageReturnValue DownloadFile(List<string> pathFileNameList)
+       public StorageReturnValue  DownloadFile(string downloadToLocation, List<string> fileNameWithExtList)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
-            IFileManagement fileManagement = FolderFileBantuan.GetInstance.DictFileMan[StorageType.LocalNetwork];
             List<FileStorageAttachment> listFileDownload = new List<FileStorageAttachment>();
-            foreach (var item in pathFileNameList)
+
+            foreach (var item in fileNameWithExtList)
             {
-                string pathFileName = item.Trim();
-                string filename = Path.GetFileName(pathFileName);
+                string pathFileName = Path.Combine(downloadToLocation, item.Trim());
                 FileStorageAttachment downloaded =null;
                 result = fileManagement.CreateFileDownload(pathFileName);
                 if (result.IsSuccess)
@@ -59,6 +61,43 @@ namespace FileStorage.Download
                     result.ErrorMessage = FileStorageProperties.GetInstance.WrongFileDownload;
                 }
                
+            }
+            return result;
+        }
+
+        public virtual async Task<StorageReturnValue> DownloadFileAsynch(string downloadToLocation, string fileNameWithExt)
+        {
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            string pathFileName = Path.Combine(downloadToLocation, fileNameWithExt);
+            if (!string.IsNullOrEmpty(pathFileName))
+            {
+                pathFileName = pathFileName.Trim();
+                result = await fileManagementAsync.CreateFileDownloadAsync(pathFileName);
+            }
+            return result;
+        }
+
+        public virtual async Task<StorageReturnValue> DownloadFileAsynch(string downloadToLocation, List<string> fileNameWithExtList)
+        {
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            List<FileStorageAttachment> listFileDownload = new List<FileStorageAttachment>();
+
+            foreach (var item in fileNameWithExtList)
+            {
+                string pathFileName = Path.Combine(downloadToLocation, item.Trim());
+                FileStorageAttachment downloaded = null;
+                result = await fileManagementAsync.CreateFileDownloadAsync(pathFileName);
+                if (result.IsSuccess)
+                {
+                    downloaded = (FileStorageAttachment)result.ListFile[0];
+                    result.IsSuccess = true;
+                    result.ListFile.Add(downloaded);
+                }
+                else
+                {
+                    result.ErrorMessage = FileStorageProperties.GetInstance.WrongFileDownload;
+                }
+
             }
             return result;
         }

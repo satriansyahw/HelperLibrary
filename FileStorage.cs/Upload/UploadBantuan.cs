@@ -5,29 +5,38 @@ using System.Text;
 
 namespace FileStorage.Upload
 {
-    public class DownloadBantuan
+    public class UploadBantuan
     {
-        private static DownloadBantuan instance;
-        public DownloadBantuan()
+        private static UploadBantuan instance;
+        public UploadBantuan()
         {
             this.LoadInitial();
         }
-        public static DownloadBantuan GetInstance
+        public static UploadBantuan GetInstance
         {
             get
             {
                 if (instance == null)
-                    instance = new DownloadBantuan();
+                    instance = new UploadBantuan();
                 return instance;
             }
         }
-        public Dictionary<StorageType, IStorageUpload> DictUploadMan = new Dictionary<StorageType, IStorageUpload>();
+        public Dictionary<StorageType, IStorageUpload> DictUpload = new Dictionary<StorageType, IStorageUpload>();
         private void LoadInitial()
         {
-            DictUploadMan.Add(StorageType.LocalNetwork, UploadNetwork.GetInstance);
-            DictUploadMan.Add(StorageType.FTP, UploadFTP.GetInstance);
-            DictUploadMan.Add(StorageType.Azure, UploadAzure.GetInstance);
+            DictUpload.Add(StorageType.LocalNetwork, UploadNetwork.GetInstance);
+            DictUpload.Add(StorageType.FTP, UploadFTP.GetInstance);
+            DictUpload.Add(StorageType.Azure, UploadAzure.GetInstance);
           
         }
+        public Dictionary<StorageType, IStorageUploadAsync> DictUploadAsync= new Dictionary<StorageType, IStorageUploadAsync>();
+        private void LoadInitialAsync()
+        {
+            DictUploadAsync.Add(StorageType.LocalNetwork, UploadNetwork.GetInstance);
+            DictUploadAsync.Add(StorageType.FTP, UploadFTP.GetInstance);
+            DictUploadAsync.Add(StorageType.Azure, UploadAzure.GetInstance);
+
+        }
+
     }
 }

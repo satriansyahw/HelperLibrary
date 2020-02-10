@@ -11,6 +11,7 @@ namespace FileStorage.Download
         public DownloadBantuan()
         {
             this.LoadInitial();
+            this.LoadInitialAsync();
         }
         public static DownloadBantuan GetInstance
         {
@@ -21,13 +22,21 @@ namespace FileStorage.Download
                 return instance;
             }
         }
-        public Dictionary<StorageType, IStorageDownload> DictUploadMan = new Dictionary<StorageType, IStorageDownload>();
+        public Dictionary<StorageType, IStorageDownload> DictDownload = new Dictionary<StorageType, IStorageDownload>();
         private void LoadInitial()
         {
-            DictUploadMan.Add(StorageType.LocalNetwork, DownloadNetwork.GetInstance);
-            DictUploadMan.Add(StorageType.FTP, DownloadFTP.GetInstance);
-            DictUploadMan.Add(StorageType.Azure, DownloadAzure.GetInstance);
+            DictDownload.Add(StorageType.LocalNetwork, DownloadNetwork.GetInstance);
+            DictDownload.Add(StorageType.FTP, DownloadFTP.GetInstance);
+            DictDownload.Add(StorageType.Azure, DownloadAzure.GetInstance);
           
+        }
+        public Dictionary<StorageType, IStorageDownloadAsync> DictDownloadAsync = new Dictionary<StorageType, IStorageDownloadAsync>();
+        private void LoadInitialAsync()
+        {
+            DictDownloadAsync.Add(StorageType.LocalNetwork, DownloadNetwork.GetInstance);
+            DictDownloadAsync.Add(StorageType.FTP, DownloadFTP.GetInstance);
+            DictDownloadAsync.Add(StorageType.Azure, DownloadAzure.GetInstance);
+
         }
     }
 }

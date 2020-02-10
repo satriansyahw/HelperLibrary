@@ -26,7 +26,7 @@ namespace FileStorage.FolderFile
 
         private string localNetwork = FileNetworkProperties.GetInstance.NetworkSharing;
 
-        public StorageReturnValue CheckFolderAndCreate(string pathFolderName)
+        public virtual StorageReturnValue CheckFolderAndCreate(string pathFolderName)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
             if (!string.IsNullOrEmpty(pathFolderName))
@@ -39,7 +39,7 @@ namespace FileStorage.FolderFile
             return result;
         }
 
-        public StorageReturnValue CheckFolderExist(string pathFolderName)
+        public virtual StorageReturnValue CheckFolderExist(string pathFolderName)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
             if (!string.IsNullOrEmpty(pathFolderName))
@@ -59,7 +59,7 @@ namespace FileStorage.FolderFile
             return result;
         }
 
-        public StorageReturnValue CreateFolder(string pathFolderName)
+        public virtual StorageReturnValue CreateFolder(string pathFolderName)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
             if (!string.IsNullOrEmpty(pathFolderName))
@@ -78,7 +78,7 @@ namespace FileStorage.FolderFile
             return result;
         }
 
-        public StorageReturnValue DeleteFolder(string pathFolderName)
+        public virtual StorageReturnValue DeleteFolder(string pathFolderName)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
             if (!string.IsNullOrEmpty(pathFolderName))

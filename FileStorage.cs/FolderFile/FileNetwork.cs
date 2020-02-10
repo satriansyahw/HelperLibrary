@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security;
 using System.Text;
+using System.Threading.Tasks;
 using FileStorage.MiscClass;
 
 namespace FileStorage.FolderFile
 {
-    public class FileNetwork : IFileManagement
+    public class FileNetwork : IFileManagement, IFileManagementAsync
     {
         StorageReturnValue result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
         private static FileNetwork instance;
@@ -23,17 +24,17 @@ namespace FileStorage.FolderFile
                 return instance;
             }
         }
-        public StorageReturnValue CreateFileUpload(byte[] fileByte,string pathFilename)
+        public virtual StorageReturnValue CreateFileUpload(byte[] uploadedFile, string pathFileNameWithExt)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
-            if (!string.IsNullOrEmpty(pathFilename) & fileByte != null)
+            if (!string.IsNullOrEmpty(pathFileNameWithExt) & uploadedFile != null)
             {
-                pathFilename = pathFilename.Trim();
-                if (File.Exists(pathFilename))
-                    result = this.DeleteFile(pathFilename);
+                pathFileNameWithExt = pathFileNameWithExt.Trim();
+                if (File.Exists(pathFileNameWithExt))
+                    result = this.DeleteFile(pathFileNameWithExt);
                 try
                 {
-                    File.WriteAllBytes(pathFilename, fileByte);
+                    File.WriteAllBytes(pathFileNameWithExt, uploadedFile);
                     result = result.SetStorageReturnValue(true, string.Empty, null);
                 }
                 catch (ArgumentNullException ex) { result = result.SetStorageReturnValue(false, "ArgumentNullException :" + ex.Message, null); }
@@ -49,7 +50,7 @@ namespace FileStorage.FolderFile
             return result;
         }
 
-        public StorageReturnValue DeleteFile(string pathFilename)
+        public virtual StorageReturnValue DeleteFile(string pathFilename)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
             if (!string.IsNullOrEmpty(pathFilename))
@@ -76,19 +77,19 @@ namespace FileStorage.FolderFile
             return result;
 
         }
-        public StorageReturnValue CreateFileDownload(string pathFileName)
+        public virtual StorageReturnValue CreateFileDownload(string pathFileNameWithExt)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
-            if (!string.IsNullOrEmpty(pathFileName))
+            if (!string.IsNullOrEmpty(pathFileNameWithExt))
             {
-                pathFileName = pathFileName.Trim();
+                pathFileNameWithExt = pathFileNameWithExt.Trim();
                 try
                 {
                     result = result.SetStorageReturnValue(false, FileStorageProperties.GetInstance.WrongFileManagement, null);
-                    if (File.Exists(pathFileName))
+                    if (File.Exists(pathFileNameWithExt))
                     {
-                        byte[] myfile = System.IO.File.ReadAllBytes(pathFileName);
-                        string filename = Path.GetFileName(pathFileName);
+                        byte[] myfile = System.IO.File.ReadAllBytes(pathFileNameWithExt);
+                        string filename = Path.GetFileName(pathFileNameWithExt);
                         result = result.SetStorageReturnValue(true, string.Empty, new List<FileStorageAttachment>() { new FileStorageAttachment(filename, filename, myfile) });
                     }
                 }
@@ -101,6 +102,33 @@ namespace FileStorage.FolderFile
                 catch (UnauthorizedAccessException ex) { result = result.SetStorageReturnValue(false, "UnauthorizedAccessException :" + ex.Message, null); }
                 catch (Exception ex) { result = result.SetStorageReturnValue(false, "Exception :" + ex.Message, null); }
             }
+            return result;
+        }
+
+        public virtual async Task<StorageReturnValue> DeleteFileAsync(string pathFileNameWithExt)
+        {
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            await Task.Run(() => {
+                result = this.CreateFileDownload(pathFileNameWithExt);
+            });
+            return result;
+        }
+
+        public virtual async Task<StorageReturnValue> CreateFileUploadAsync(byte[] uploadedFile, string pathFileNameWithExt)
+        {
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            await Task.Run(() => {
+                result = this.CreateFileDownload(pathFileNameWithExt);
+            });
+            return result;
+        }
+
+        public virtual async Task<StorageReturnValue> CreateFileDownloadAsync(string pathFileNameWithExt)
+        {
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            await Task.Run(() => {
+                result = this.CreateFileDownload(pathFileNameWithExt);
+            });
             return result;
         }
     }

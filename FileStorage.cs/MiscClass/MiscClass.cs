@@ -64,83 +64,12 @@ namespace FileStorage.MiscClass
             this.FTPUserName = ftpusername;
             this.FTPPassword = ftppassword;
             this.FTPAddress = ftpaddress;
+
+
         }
     }
-    public class AzureStorage
-    {
-        public string StorageAccountName = @"dsdigsudang";
-        public string StorageAccountKey = @"+sXdBMuZS3hhWGezMNzmsjq+48z5R4tIt73nquF0/QSegcPWYjHu5jqgjBnq2NkGUVw0vv/XP353lxdvhnG1oHQ==";
-        public string StorageContainerName = @"stasrter";
-        public bool IsHttps = true;
-        public CloudStorageAccount accountInstance;
-        public StorageCredentials credentialInstance;
-        public CloudBlobClient blobClientInstance;
-        public CloudBlobContainer blobContainerInstance { get; set; }
-
-        public CloudStorageAccount  AzureStorageAccount
-        {
-            get
-            {
-                if(accountInstance == null)
-                {
-                    accountInstance = new CloudStorageAccount(this.AzureStorageCredentials, this.IsHttps);
-                }
-                return accountInstance;
-            }
-        }
-        public StorageCredentials AzureStorageCredentials
-        {
-            get
-            {
-                if (credentialInstance == null)
-                {
-                    credentialInstance = new StorageCredentials(this.StorageAccountName, this.StorageAccountKey);
-                }
-                return credentialInstance;
-            }
-        }
-        public CloudBlobClient AzureBlobClient
-        {
-            get
-            {
-                if (blobClientInstance == null)
-                {
-                    blobClientInstance = this.AzureStorageAccount.CreateCloudBlobClient();
-                }
-                return blobClientInstance;
-            }
-        }
-        public CloudBlobContainer AzureBlobContainer
-        {
-            get
-            {
-                if (blobContainerInstance == null)
-                {
-                    blobContainerInstance = this.AzureBlobClient.GetContainerReference(this.StorageAccountName);
-                }
-                return blobContainerInstance;
-            }
-        }
-        public AzureStorage()
-        {
-
-        }
-        public AzureStorage(string storageAccountName, string storageAccountKey, string storageContainerName,bool isHttps)
-        {
-            this.StorageAccountName = storageAccountName;
-            this.StorageAccountKey = storageAccountKey;
-            this.StorageContainerName = storageContainerName;
-            this.IsHttps = isHttps;
-
-        }
-        public void SetFileAzureProperties(string storageAccountName,string storageAccountKey,string storageContainerName, bool isHttps)
-        {
-            this.StorageAccountName = storageAccountName;
-            this.StorageAccountKey = storageAccountKey;
-            this.StorageContainerName = storageContainerName;
-            this.IsHttps = isHttps;
-        }
-    }
+   
+   
    
 
     public class FileStorageAttachment
@@ -164,7 +93,16 @@ namespace FileStorage.MiscClass
             this.FileNameWithExtRenamed = fileNameWithExtRenamed;
             this.FileNameWithExt = fileNameWithExtRenamed;
             this.FileAttachment = fileAttachment;
+       }
+        public string GetFileName
+        {
+            get
+            {
+                string fileName = !string.IsNullOrEmpty(this.FileNameWithExtRenamed) ? this.FileNameWithExtRenamed : this.FileNameWithExt;
+                return fileName;
+            }
         }
+        
     }
     public class StorageReturnValue {
         public bool IsSuccess { get; set; }

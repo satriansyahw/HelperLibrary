@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using FileStorage.MiscClass;
-
+using System.Linq;
 namespace FileStorage.FolderFile
 {
     public class FolderFTP:IFolderManagement
     {
         private static FolderFTP instance;
+        StorageReturnValue result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+        FTPClient client = new FTPClient();
         public FolderFTP()
         {
         }
@@ -21,24 +23,45 @@ namespace FileStorage.FolderFile
             }
         }
 
-        public StorageReturnValue CheckFolderAndCreate(string folderName)
+        public virtual StorageReturnValue CheckFolderAndCreate(string folderName)
         {
-            throw new NotImplementedException();
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            if (client.FtpCreateDirectory(folderName))
+                result = result.SetStorageReturnValue(true, string.Empty, null);
+            else
+                result = result.SetStorageReturnValue(false, string.Empty, null);
+            return result;
         }
 
-        public StorageReturnValue CheckFolderExist(string folderName)
+        public virtual StorageReturnValue CheckFolderExist(string folderName)
         {
-            throw new NotImplementedException();
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            var checkDir  = client.ListDirectory(folderName).Where(a => (string)a == folderName).ToList();
+            if (checkDir.Count > 0)
+                result = result.SetStorageReturnValue(true, string.Empty, null);
+            else
+                result = result.SetStorageReturnValue(false, string.Empty, null);
+            return result;
         }
 
-        public StorageReturnValue CreateFolder(string folderName)
+        public virtual StorageReturnValue CreateFolder(string folderName)
         {
-            throw new NotImplementedException();
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            if (client.FtpCreateDirectory(folderName))
+                result = result.SetStorageReturnValue(true, string.Empty, null);
+            else
+                result = result.SetStorageReturnValue(false, string.Empty, null);
+            return result;
         }
 
-        public StorageReturnValue DeleteFolder(string folderName)
+        public virtual StorageReturnValue DeleteFolder(string folderName)
         {
-            throw new NotImplementedException();
+            result = new StorageReturnValue(false, FileStorageProperties.GetInstance.WrongInitialManagement, null);
+            if (client.FtpDeleteDirectory(folderName))
+                result = result.SetStorageReturnValue(true, string.Empty, null);
+            else
+                result = result.SetStorageReturnValue(false, string.Empty, null);
+            return result;
         }
     }
 }

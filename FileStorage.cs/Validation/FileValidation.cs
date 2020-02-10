@@ -102,14 +102,14 @@ namespace FileStorage.Validation
                 }
             }
             return result;
-        }    
+        }
 
         public StorageReturnValue CheckFolderStorageExistAndCreate(string folderName)
         {
             result = new StorageReturnValue(false,FileStorageProperties.GetInstance.WrongInitialManagement,null);
             if (!string.IsNullOrEmpty(folderName))
             {
-                IFolderManagement folderManagement = FolderFileBantuan.GetInstance.DictFolderMan[FileStorageProperties.GetInstance.FileStorageType];
+                IFolderManagement folderManagement = FolderFileBantuan.GetInstance.DictFolder[FileStorageProperties.GetInstance.FileStorageType];
                 result = folderManagement.CheckFolderAndCreate(folderName);
             }
             return result;
