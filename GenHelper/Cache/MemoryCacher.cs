@@ -5,6 +5,19 @@ namespace GenHelper.Cache
 {
     public class MemoryCacher
     {
+        private static MemoryCacher instance;
+        public MemoryCacher()
+        {
+
+        }
+        public static MemoryCacher GetInstance
+        {
+            get
+            {
+                if (instance == null) instance = new MemoryCacher();
+                return instance;
+            }
+        }
         public object GetValue(string key)
         {
             MemoryCache memoryCache = MemoryCache.Default;
