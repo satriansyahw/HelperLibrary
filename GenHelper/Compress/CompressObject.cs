@@ -11,12 +11,16 @@ using System.Reflection;
 
 namespace GenHelper.Compress
 {
-   
+
     public class CompressObject
     {
         private static CompressObject instance;
         private readonly MemoryCacher cacher = MemoryCacher.GetInstance;
         private readonly int MaxSizeStrToSplit = 100000;//100kb
+        private readonly double MaxChunkCacheTime = 5;//100kb
+        public readonly string ChunkRequestDownloadHeader = "ChunkDownloadPartial";
+        public readonly string ChunkResponseUploadHeader = "ChunkUploadPartial";
+
         //private readonly int ChunkWaitTime = 30000;// wait fo 30 seconds
         public CompressObject()
         {
@@ -30,7 +34,7 @@ namespace GenHelper.Compress
                 return instance;
             }
         }
-        
+
         public byte[] CompressedData(object data)
         {
             string json = string.Empty;
@@ -51,6 +55,28 @@ namespace GenHelper.Compress
                 result = outputBytes;
 
             }
+            return result;
+        }
+        public byte[] CompressedDataImg(object data)
+        {
+            string json = string.Empty;
+            byte[] result = null;
+            using (var output = new StringWriter())
+            {
+                JSON.SerializeDynamic(data, output);
+                json = output.ToString();
+            }
+
+            byte[] inputBytes = Encoding.UTF8.GetBytes(json);
+            using (var outputStream = new MemoryStream())
+            {
+                using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
+                    gZipStream.Write(inputBytes, 0, inputBytes.Length);
+
+                var outputBytes = outputStream.ToArray();
+                result = outputBytes;
+            }
+
             return result;
         }
         public string DeCompressedData(byte[] data)
@@ -89,21 +115,23 @@ namespace GenHelper.Compress
             }
             return result;
         }
-        public List<ChunkData> ChunkDataPreparation(string fileNameWithExt,object dataChuncked)
+
+        public List<ChunkData> ChunkDataPreparation(string fileNameWithExt, object dataChuncked)
         {
             ChunkData chunk = null;
-            string chunkKey = "chunk_"+(Guid.NewGuid().ToString() + DateTime.Now.ToString("yyyyMMddhhmmss")).Replace("-", "");
+            string chunkKey = "chunk" + (Guid.NewGuid().ToString() + DateTime.Now.ToString("yyyyMMddhhmmss")).Replace("-", "");
             List<ChunkData> listResult = new List<ChunkData>();
             byte[] byteChunked = this.CompressedData(dataChuncked);
             string strChunked = Convert.ToBase64String(byteChunked);
             int lenStrChunked = strChunked.Length;
-            if(lenStrChunked > 0)
+            string strChunkedTmp = strChunked;
+            if (lenStrChunked > 0)
             {
                 int countLoop = lenStrChunked / MaxSizeStrToSplit;
                 int tempCount = countLoop * MaxSizeStrToSplit;
                 if (tempCount < lenStrChunked) countLoop++;
 
-                if(countLoop  > 0)
+                if (countLoop > 0)
                 {
                     int startLoop = 0;
                     int endLoop = 0;
@@ -111,17 +139,27 @@ namespace GenHelper.Compress
                     for (int i = 0; i < countLoop; i++)
                     {
                         chunk = new ChunkData();
-                        startLoop = i * MaxSizeStrToSplit;
-                        endLoop = (i + 1) * MaxSizeStrToSplit;
-                        if (endLoop > lenStrChunked) endLoop = lenStrChunked;
+                        chunk.ChunkLength = lenStrChunked;
+                        startLoop = 0;
+                        endLoop = 1 * MaxSizeStrToSplit;
+                        int lenStrChunkedTmp = strChunkedTmp.Length;
+                        if (endLoop > lenStrChunkedTmp) endLoop = lenStrChunkedTmp;
+                        strToTransferred = string.Empty;
+                        string addchars = "*@~^-";
+                        strChunkedTmp = addchars + strChunkedTmp;
+                        strToTransferred = strChunkedTmp.Substring(startLoop, (endLoop + addchars.Length));
+                        int check1 = strChunkedTmp.Length;
+                        strChunkedTmp = strChunkedTmp.Replace(strToTransferred, string.Empty);
 
-                        strToTransferred = strChunked.Substring(startLoop, endLoop);
-                        chunk.DataChunk = strToTransferred;
+                        int check2 = strChunkedTmp.Length;
+
+                        chunk.DataChunk = strToTransferred.Replace(addchars, string.Empty);
                         chunk.ChunkMaxCount = countLoop;
                         chunk.ChunkCurrent = (i + 1);
                         chunk.FileName = fileNameWithExt;
                         chunk.ChunkKey = chunkKey;
-                        chunk.CompleteChunk = i >= (countLoop-1)?true: false;
+                        chunk.CompleteChunk = i >= (countLoop - 1) ? true : false;
+                        chunk.ChunkTimeMinutes = MaxChunkCacheTime;
                         listResult.Add(chunk);
 
                     }
@@ -129,16 +167,29 @@ namespace GenHelper.Compress
                 else
                 {
                     chunk = new ChunkData();
+                    chunk.ChunkLength = lenStrChunked;
                     chunk.DataChunk = strChunked;
                     chunk.ChunkMaxCount = 1;
                     chunk.ChunkCurrent = 1;
                     chunk.FileName = fileNameWithExt;
                     chunk.ChunkKey = chunkKey;
                     chunk.CompleteChunk = true;
+                    chunk.ChunkTimeMinutes = MaxChunkCacheTime;
                     listResult.Add(chunk);
                 }
             }
             return listResult;
+        }
+
+        public bool ChunkIsAMust(object obj)
+        {
+            if (obj == null) return false;
+            byte[] byteChunked = this.CompressedData(obj);
+            string strChunked = Convert.ToBase64String(byteChunked);
+            int lenStrChunked = strChunked.Length;
+            if (lenStrChunked > this.MaxSizeStrToSplit)
+                return true;
+            return false;
         }
         public async Task<ChunkData> ChunkDataDownload(string fileNameWithExt, object dataChuncked)
         {
@@ -160,80 +211,111 @@ namespace GenHelper.Compress
             return result;
 
         }
-        public async Task<ChunkDataResult> ChunkDataResultClientVerify(List<ChunkData> listChunk)
+        public ChunkDataResult ChunkDataResultClientVerify(List<ChunkData> listChunk)
         {
             ChunkDataResult dataResult = new ChunkDataResult();
-            await Task.Run(() =>
+            IEqualityComparer<ChunkData> customComparer =
+                   new PropertyComparer<ChunkData>("ChunkCurrent");
+            IEnumerable<ChunkData> distinctChunkData = listChunk.Distinct(customComparer);
+            if (distinctChunkData.Count() > 0)
             {
-                byte[] byteData = null;
-                IEqualityComparer<ChunkData> customComparer =
-                       new PropertyComparer<ChunkData>("ChunkCurrent");
-                IEnumerable<ChunkData> distinctChunkData = listChunk.Distinct(customComparer);
-                if (distinctChunkData.Count() > 0)
+                string strChunked64Base = string.Empty;
+                string tempForByte = string.Empty;
+                foreach (var item in distinctChunkData)
                 {
-                    string strChunked64Base = string.Empty;
-                    foreach (var item in distinctChunkData)
-                    {
-                        strChunked64Base += item.DataChunk;
-                    }
-                    if (!string.IsNullOrEmpty(strChunked64Base))
-                    {
-                        string tempForByte = this.DeCompressedData(strChunked64Base);
-                        byteData = Convert.FromBase64String(tempForByte);
-                    }
-                    dataResult.FileNameWithExt = listChunk[0].FileName;
-                    dataResult.DataChunk = byteData;
+                    strChunked64Base += item.DataChunk;
                 }
-            });
+                if (!string.IsNullOrEmpty(strChunked64Base))
+                {
+                    tempForByte = this.DeCompressedData(strChunked64Base);
+                }
+                dataResult.FileNameWithExt = listChunk[0].FileName;
+                dataResult.DataChunk = tempForByte;
+            }
             return dataResult;
         }
-        public async Task<ChunkDataResult> ChunkDataUploadSvrVerify(ChunkDataInfo chunk)
+
+        public List<T> ConvertChunkDataResultToList<T>(ChunkDataResult chunkData) where T : class
+        {
+            string deCompress = (chunkData.DataChunk);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(deCompress);
+        }
+        public byte[] ConvertChunkDataResultToByteArray(ChunkDataResult chunkData)
+        {
+            string deCompress = (chunkData.DataChunk);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<byte[]>(deCompress);
+        }
+        public bool IsChunkData(string objStr)
+        {
+            bool result = false;
+            ChunkData check = null;
+            try
+            {
+                check = Newtonsoft.Json.JsonConvert.DeserializeObject<ChunkData>(objStr);
+                result = true;
+            }
+            catch { }
+            return result;
+
+        }
+        public ChunkDataResult ChunkDataUploadSvrVerify(ChunkDataInfo chunk)
         {
             // if you want to call this methode... just make sure all your loop ChunkDataUploadSvrAsync has been finished
             ChunkDataResult dataResult = new ChunkDataResult();
-            await Task.Run(() =>
-            {
-                string chunkKey = chunk.ChunkKey;
-                int chunkCount = chunk.ChunkMaxCount;
-                byte[] byteData = null;
-                List<ChunkData> listChunk = new List<ChunkData>();
-                int tryTimes = 0;
-                int maxTryTimes = 6;// max 1 minute for waiting
-                while (true)
-                {
-                    tryTimes++;
-                    for (int i = 0; i < chunkCount; i++)
-                    {
-                        object obj = cacher.GetValue(chunkKey + "_" + (i + 1).ToString());
-                        if (obj != null)
-                            listChunk.Add((ChunkData)obj);
-                    }
-                    if (listChunk.Count == chunkCount) break;
-                    if (tryTimes == maxTryTimes) break;
-                    listChunk = new List<ChunkData>();
-                    Task.Delay(10000);
-                }
-                if(listChunk.Count > 0)
-                {
-                    string strChunked64Base = string.Empty;//it's str64base
-                    foreach (var item in listChunk.OrderBy(a=>a.ChunkCurrent).ToList())
-                    {
-                        strChunked64Base = strChunked64Base + item.DataChunk;
-                    }
-                    if(!string.IsNullOrEmpty(strChunked64Base))
-                    {
-                         string tempForByte = this.DeCompressedData(strChunked64Base);
-                         byteData = Convert.FromBase64String(tempForByte);
-                    }
-                    dataResult.FileNameWithExt = listChunk[0].FileName;
-                    dataResult.DataChunk = byteData;
-                }
 
-            });
+            string chunkKey = chunk.ChunkKey;
+            int chunkCount = chunk.ChunkMaxCount;
+            byte[] byteData = null;
+            List<ChunkData> listChunk = new List<ChunkData>();
+            int tryTimes = 0;
+            int maxTryTimes = 6;// max 1 minute for waiting
+            string tempForByte = string.Empty;
+            while (true)
+            {
+                tryTimes++;
+                for (int i = 0; i < chunkCount; i++)
+                {
+                    object obj = cacher.GetValue(chunkKey + "_" + (i + 1).ToString());
+                    if (obj != null)
+                    {
+                        listChunk.Add((ChunkData)obj);
+                    }
+                    else
+                    {
+                        string a = string.Empty;
+                    }
+                }
+                if (listChunk.Count == chunkCount) break;
+                if (tryTimes == maxTryTimes) break;
+                listChunk = new List<ChunkData>();
+                Task.Delay(10000);
+            }
+            if (listChunk.Count > 0)
+            {
+                string strChunked64Base = string.Empty;//it's str64base
+                var makna = listChunk.OrderBy(a => a.ChunkCurrent).ToList();
+                foreach (var item in listChunk.OrderBy(a => a.ChunkCurrent).ToList())
+                {
+                    strChunked64Base = strChunked64Base + item.DataChunk;
+                }
+                if (!string.IsNullOrEmpty(strChunked64Base))
+                {
+                    tempForByte = this.DeCompressedData(strChunked64Base);
+                    //  var sshasil = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RFIDTagStorage_Testing>>(sss);
+                    byteData = Convert.FromBase64String(strChunked64Base);
+
+                }
+                dataResult.FileNameWithExt = listChunk[0].FileName;
+                dataResult.DataChunk = tempForByte;
+            }
+
+
             return dataResult;
         }
+
         public async Task ChunkDataUploadSvr(ChunkData chunk)
         {
+
             await Task.Run(() =>
             {
                 string chunkKey = chunk.ChunkKey;
@@ -246,6 +328,7 @@ namespace GenHelper.Compress
         }
         public ChunkData ChunkDataUploadSvrSync(ChunkData chunk)
         {
+            /*Gak dipake*/
             MemoryCacher cacher = new MemoryCacher();
             ChunkData result = new ChunkData();
             string savedchunk = string.Empty;
@@ -283,5 +366,5 @@ namespace GenHelper.Compress
             return result;
         }
     }
-   
+
 }

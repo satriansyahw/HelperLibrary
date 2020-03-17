@@ -9,6 +9,7 @@ namespace GenHelper
         public string DataChunk { get; set; }
         public int ChunkMaxCount { get; set; }
         public int ChunkCurrent { get; set; }
+        public int ChunkLength { get; set; }
         public string ChunkKey { get; set; }
         public bool CompleteChunk { get; set; }
         public string FileName { get; set; }
@@ -27,7 +28,7 @@ namespace GenHelper
     public class ChunkDataResult
     {
         public string FileNameWithExt { get; set; }
-        public byte[] DataChunk { get; set; }
+        public string DataChunk { get; set; }
     }
     public class ChunkDataInfo
     {
